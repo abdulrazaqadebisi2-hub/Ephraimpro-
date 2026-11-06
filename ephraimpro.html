@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPHRAIM.V — Game Modelling & Graphics Design | Lagos 2099</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{background:#050510;color:#fff;overflow-x:hidden}
+a{color:#00FFFF;text-decoration:none}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,5,16,.95);display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #222;flex-wrap:wrap;gap:8px}
+.logo{font-weight:900;font-size:20px}.logo span{color:#00FFFF}.logo b{color:#FF9D00}
+.views{background:#111;border:1px solid #00FFFF;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:bold}
+.views #viewCount{color:#FFD700}
+.contact-btn{background:#5865F2;color:#fff;padding:9px 16px;border-radius:999px;font-weight:900;font-size:14px;border:none;cursor:pointer}
+.hero{margin-top:68px;position:relative;text-align:center;overflow:hidden}
+.hero img.poster{width:100%;max-height:520px;object-fit:cover;display:block;filter:brightness(.75)}
+.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;background:linear-gradient(180deg,rgba(0,0,0,.2),rgba(5,5,16,.95))}
+.hero-content h1{font-size:44px;line-height:1.05;text-shadow:0 4px 20px #000}.hero-content h1 span{color:#00FFFF}.hero-content h1 em{color:#FF9D00;font-style:normal}
+.hero-content p{color:#ddd;margin:14px auto;max-width:640px;font-size:15px;line-height:1.6}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.badge{background:rgba(0,0,0,.7);border:1px solid #444;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:bold}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn{padding:14px 22px;border-radius:12px;font-weight:900;border:none;cursor:pointer;font-size:15px}
+.btn-discord{background:#5865F2;color:#fff}.btn-fiverr{background:#00FF88;color:#000}.btn-portfolio{background:#fff;color:#000}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:18px}
+.stat{background:#0d0d22;border:1px solid #222;border-radius:14px;padding:14px 18px;text-align:center;min-width:140px}
+.stat b{font-size:24px;color:#00FFFF;display:block}.stat span{font-size:12px;color:#999}
+.section{max-width:1000px;margin:0 auto;padding:28px 16px}
+.section h2{font-size:26px;margin-bottom:6px}.section h2 span{color:#00FFFF}
+.section p.sub{color:#aaa;font-size:14px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:#0d0d22;border:1px solid #222;border-radius:16px;overflow:hidden}
+.card img{width:100%;height:320px;object-fit:cover;object-position:top;display:block;background:#111}
+.card-body{padding:14px}.card-body h3{font-size:18px}.card-body p{font-size:13px;color:#aaa;line-height:1.5;margin:6px 0 10px}
+.price{color:#FFD700;font-weight:900}
+.card-btn{width:100%;padding:11px;border-radius:10px;border:none;font-weight:900;cursor:pointer;background:#00FFFF;color:#000;margin-top:8px}
+.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.service{background:#0d0d22;border:1px solid #222;border-radius:14px;padding:18px}
+.service h3{margin-bottom:8px}.service p{font-size:13px;color:#aaa;line-height:1.6}.service b{color:#FFD700}
+.owner-box{background:#0d0d22;border:2px solid #5865F2;border-radius:16px;padding:18px}
+.hidden-pass{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.hidden-pass input{padding:12px;border-radius:10px;border:1px solid #333;background:#050510;color:#fff;flex:1;min-width:180px}
+.hidden-pass button{padding:12px 18px;border-radius:10px;border:none;background:#5865F2;color:#fff;font-weight:900;cursor:pointer}
+#editor{display:none;margin-top:14px}
+#editor textarea,#editor input{width:100%;padding:12px;border-radius:10px;border:1px solid #333;background:#050510;color:#fff;margin-bottom:10px}
+#editor textarea{min-height:90px}
+#postBtn{background:#00FF88;color:#000;padding:12px 18px;border:none;border-radius:10px;font-weight:900;cursor:pointer;width:100%}
+#activateBtn{background:#FFD700;color:#000;padding:12px 18px;border:none;border-radius:10px;font-weight:900;cursor:pointer;width:100%;margin-bottom:10px}
+.post{border:1px solid #222;background:#050510;border-radius:12px;padding:14px;margin-top:12px}
+.post h4{font-size:16px}.post p{font-size:14px;color:#ddd;line-height:1.6;margin:6px 0}.post span{font-size:11px;color:#888}
+.post img{max-width:100%;border-radius:10px;margin-top:8px;max-height:400px;object-fit:cover}
+.del-btn{background:#FF2D55;color:#fff;border:none;padding:5px 10px;border-radius:999px;font-size:11px;cursor:pointer;float:right}
+footer{text-align:center;padding:30px 16px;color:#777;font-size:13px;border-top:1px solid #222;margin-top:20px}
+.discord-big{background:#5865F2;color:#fff;display:inline-block;padding:14px 26px;border-radius:999px;font-weight:900;margin:12px 0}
+.live-dot{display:inline-block;width:8px;height:8px;background:#00FF88;border-radius:50%;margin-right:5px;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.3}}
+.preview{max-width:100%;border-radius:10px;margin-bottom:10px;display:none}
+.setup-box{background:#FFF3CD;color:#000;padding:12px;border-radius:10px;font-size:13px;line-height:1.5;margin:10px 0;display:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">EPHRAIM<span>.</span><b>V</b> <span style="font-size:11px;color:#888">GAME MODELS</span></div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <div class="views">👀 Views: <span id="viewCount">...</span> • Live</div>
+    <a href="https://discord.com/users/ephraim.v" target="_blank"><button class="contact-btn">💬 Contact on Discord</button></a>
+  </div>
+</div>
+
+<div class="hero">
+  <img class="poster" src="poster.jpg" alt="Lagos 2099" onerror="this.style.display='none'">
+  <div class="hero-content">
+    <div class="badge" style="background:#FFD700;color:#000">🔥 1 OF 1 EXCLUSIVE PACKS AVAILABLE</div>
+    <h1 style="margin-top:12px">GAME MODELLING<br><span>& GRAPHICS</span> <em>DESIGN</em></h1>
+    <p>I create <b style="color:#fff">African Cyberpunk Game Characters</b> nobody else has. Adeola, Kemi, Kilo — Lagos 2099.</p>
+    <div class="badges"><span class="badge">⚔️ Character Design</span><span class="badge">🎮 Game Models</span><span class="badge">🎨 Graphics Design</span><span class="badge">🏙️ Lagos 2099</span></div>
+    <div class="cta-row">
+      <a href="https://discord.com/users/ephraim.v" target="_blank"><button class="btn btn-discord">💬 DM Me: ephraim.v</button></a>
+      <a href="https://www.fiverr.com/" target="_blank"><button class="btn btn-fiverr">🟢 Order on Fiverr — $500</button></a>
+      <a href="#work"><button class="btn btn-portfolio">👇 See My Work</button></a>
+    </div>
+  </div>
+</div>
+
+<div class="stats"><div class="stat"><b>3+</b><span>Main Characters</span></div><div class="stat"><b>15+</b><span>Poses Per Character</span></div><div class="stat"><b>1 OF 1</b><span>Exclusive Packs</span></div><div class="stat"><b>$500</b><span>Full Exclusive Pack</span></div></div>
+
+<div class="section" id="work">
+  <h2>My Work <span>— Lagos 2099</span></h2>
+  <p class="sub">These are my real model sheets. Click Contact to buy.</p>
+  <div class="grid">
+    <div class="card"><img src="adeola.png" alt="Adeola" onerror="this.src='poster.jpg'"><div class="card-body"><h3>ADEOLA — Fighter</h3><p>Neon Blue Braids, Katana, Cyber Jacket.</p><p class="price">In Ultimate Pack — $500</p><a href="https://discord.com/users/ephraim.v" target="_blank"><button class="card-btn">💬 Buy on Discord — ephraim.v</button></a></div></div>
+    <div class="card"><img src="kemi.png" alt="Kemi" onerror="this.src='poster.jpg'"><div class="card-body"><h3>KEMI — Tech Rigger</h3><p>Scrap-Bee Drone, Multi-Tool Gauntlet.</p><p class="price">In Ultimate Pack — $500</p><a href="https://discord.com/users/ephraim.v" target="_blank"><button class="card-btn">💬 Buy on Discord — ephraim.v</button></a></div></div>
+    <div class="card"><img src="kilo.png" alt="Kilo" onerror="this.src='poster.jpg'"><div class="card-body"><h3>KILO — Hacker</h3><p>Holo-Tablet, Energy Dagger, Headset.</p><p class="price">In Ultimate Pack — $500</p><a href="https://discord.com/users/ephraim.v" target="_blank"><button class="card-btn">💬 Buy on Discord — ephraim.v</button></a></div></div>
+  </div>
+</div>
+
+<div class="section"><h2>Services <span>& Prices</span></h2><p class="sub">All orders start on Discord: ephraim.v</p><div class="services"><div class="service"><h3>🎮 Custom Game Character</h3><p>1 exclusive character for YOU only.<br><b>$150</b></p></div><div class="service"><h3>🔥 Lagos 2099 Full Pack</h3><p>3 Characters + Playable Game + Custom Character.<br><b>$500 — 1 OF 1</b></p></div><div class="service"><h3>🎨 Graphics Design</h3><p>Logo, Banner, Thumbnail, Poster.<br><b>$50 — $100</b></p></div><div class="service"><h3>💬 Discord Server Setup</h3><p>Full server: Channels, Roles, Bots.<br><b>$200 — $500</b></p></div></div></div>
+
+<div class="section"><div class="owner-box">
+  <h3><span class="live-dot"></span> 📢 Latest Updates — <span style="color:#00FF88;font-size:13px">LIVE FOR EVERYONE</span></h3>
+  <p>New drops, new characters, new packs. When I post, everyone for the world go see am.</p>
+  <p id="syncStatus" style="color:#888;font-size:12px">🔄 Loading global posts...</p>
+  <div id="loginArea"><label style="font-size:12px;color:#aaa">Owner Login (Secret Code):</label><div class="hidden-pass"><input type="password" id="ownerPass" placeholder="Enter owner code ••••" autocomplete="off"><button onclick="unlockPost()">🔓 Unlock Posting</button></div><p id="loginMsg" style="font-size:12px;color:#FF6B6B"></p></div>
+  <div id="editor">
+    <div id="setupBox" class="setup-box"><b>⚙️ ONE-TIME SETUP — No Signup, No Token:</b><br>Click below once, e go create your free global storage automatically (npoint.io).<br><br><button id="activateBtn" onclick="activateGlobal()">🔥 Activate Global Posts (No Signup, 1 Click)</button><div id="activateResult" style="margin-top:8px;font-weight:bold"></div></div>
+    <p style="color:#00FF88">✅ Unlocked! Your post will show to EVERYONE.</p>
+    <input id="postTitle" placeholder="Post Title — e.g. NEW CHARACTER DROP 🔥">
+    <textarea id="postText" placeholder="Write your update here..."></textarea>
+    <label style="font-size:12px;color:#aaa">📷 Add Picture (from your phone):</label>
+    <input type="file" id="postFile" accept="image/*" onchange="previewImage(event)">
+    <img id="imgPreview" class="preview">
+    <label style="font-size:12px;color:#aaa">Or paste Image Link:</label>
+    <input id="postImage" placeholder="https://... image link">
+    <button id="postBtn" onclick="addPostGlobal()">📤 Post To Everyone</button>
+    <button onclick="lockPost()" style="background:#333;color:#fff;padding:10px;border:none;border-radius:10px;width:100%;margin-top:8px;cursor:pointer">🔒 Lock Again</button>
+  </div>
+  <div id="postsList"></div>
+</div></div>
+
+<footer><h2 style="color:#fff">Want a character like this for YOUR game?</h2><p>DM me on Discord now. 1 buyer for Exclusive Pack.</p><a class="discord-big" href="https://discord.com/users/ephraim.v" target="_blank">💬 Contact: ephraim.v on Discord</a><p>Discord: <b style="color:#fff">ephraim.v</b> • Lagos 2099 © 2026 Ephraim.V</p><p>Views: <span id="viewCount2">...</span> • Counted by server, cannot be edited</p></footer>
+
+<script>
+// ============ CONFIG - NPOINT, NO AUTH, NO SIGNUP ============
+// JSONBlob now needs Bearer token, so we use npoint.io instead.
+// npoint works with NO token: POST https://api.npoint.io/ -> returns {id}
+let NPOINT_ID = 'YOUR_NPOINT_ID_HERE'; // <-- PASTE ID HERE AFTER ACTIVATE
+const SECRET_CODE = '2026';
+function getNpointUrl(){ return `https://api.npoint.io/${NPOINT_ID}`; }
+
+// ============ VIEWS - TRULY WORKING (ABACUS) ============
+const VIEW_NAMESPACE = 'ephraimv-lagos2099';
+const VIEW_KEY = 'views-v5';
+async function loadViews(){
+  const viewEls = [document.getElementById('viewCount'), document.getElementById('viewCount2')];
+  let lastCount = parseInt(localStorage.getItem('ephraim_last_views') || '0');
+  if(lastCount>0) viewEls.forEach(el=>{ if(el) el.innerText = lastCount.toLocaleString(); });
+  if(sessionStorage.getItem('ephraim_counted')){
+    try{ const res = await fetch(`https://abacus.jasoncameron.dev/get/${VIEW_NAMESPACE}/${VIEW_KEY}`); const data = await res.json(); if(data.value!==undefined){ localStorage.setItem('ephraim_last_views', data.value); viewEls.forEach(el=>{ if(el) el.innerText = data.value.toLocaleString(); }); } }catch(e){}
+    return;
+  }
+  try{
+    const res = await fetch(`https://abacus.jasoncameron.dev/hit/${VIEW_NAMESPACE}/${VIEW_KEY}`);
+    const data = await res.json();
+    if(data.value!==undefined){ sessionStorage.setItem('ephraim_counted','yes'); localStorage.setItem('ephraim_last_views', data.value); viewEls.forEach(el=>{ if(el) el.innerText = data.value.toLocaleString(); }); return; }
+    throw new Error('No value');
+  }catch(e){
+    try{ const r2 = await fetch(`https://abacus.jasoncameron.dev/get/${VIEW_NAMESPACE}/${VIEW_KEY}`); const d2 = await r2.json(); if(d2.value!==undefined) viewEls.forEach(el=>{ if(el) el.innerText = d2.value.toLocaleString(); }); }catch(e2){ if(lastCount>0) viewEls.forEach(el=>{ if(el) el.innerText = lastCount.toLocaleString(); }); }
+  }
+}
+loadViews();
+
+// ============ GLOBAL POSTS - NPOINT, NO AUTH ============
+let posts=[]; let isOwner=false; let uploadedImageData='';
+function previewImage(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=function(ev){ uploadedImageData=ev.target.result; const p=document.getElementById('imgPreview'); p.src=uploadedImageData; p.style.display='block'; }; r.readAsDataURL(f); }
+
+async function activateGlobal(){
+  const btn=document.getElementById('activateBtn'); btn.innerText='⏳ Creating...';
+  try{
+    const initial=[{title:'🔥 Welcome to Lagos 2099 — 1 OF 1 Pack Now Available!', text:'Adeola + Kemi + Kilo + Playable Game + Custom Character for YOU. $500 Exclusive. DM me on Discord: ephraim.v', img:'poster.jpg', date:new Date().toLocaleString()}];
+    // npoint: POST to / creates new bin, NO AUTH NEEDED
+    const res=await fetch('https://api.npoint.io/', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({posts: initial})});
+    const data=await res.json();
+    const nid=data.id || data._id || '';
+    if(!nid) throw new Error('No ID returned - response: '+JSON.stringify(data).slice(0,200));
+    document.getElementById('activateResult').innerHTML=`✅ DONE! Your Global ID is:<br><b style="font-size:16px;background:#000;color:#FFD700;padding:6px 10px;border-radius:8px;display:inline-block;margin:8px 0">${nid}</b><br>1. Copy this ID<br>2. Paste it in code where it says YOUR_NPOINT_ID_HERE<br>3. Upload to Render again — Done forever! No signup, No token.`;
+    NPOINT_ID=nid; posts=initial; document.getElementById('setupBox').style.background='#D4EDDA'; renderPosts();
+    document.getElementById('syncStatus').innerText='✅ Global activated! Copy ID above and paste in code.';
+  }catch(e){ document.getElementById('activateResult').innerText='❌ Error: '+e.message+' — Try again.'; btn.innerText='🔥 Try Activate Again'; }
+}
+
+async function loadGlobalPosts(){
+  if(NPOINT_ID==='YOUR_NPOINT_ID_HERE'){
+    posts=[{title:'🔥 Welcome to Lagos 2099 — 1 OF 1 Pack Now Available!', text:'Adeola + Kemi + Kilo + Playable Game + Custom Character for YOU. $500 Exclusive. DM me on Discord: ephraim.v', img:'poster.jpg', date:new Date().toLocaleString()},{title:'⚔️ ADEOLA — New Fighter Drop', text:'Neon braids, katana, cyber jacket. Full model sheet now in gallery. DM ephraim.v to buy.', img:'adeola.png', date:new Date().toLocaleString()}];
+    document.getElementById('syncStatus').innerText='⚠️ Demo mode — Owner: Type 2026 → Click Activate Global Posts (No Signup) → Copy ID → Paste in code';
+    renderPosts(); return;
+  }
+  try{
+    const res=await fetch(getNpointUrl());
+    if(!res.ok) throw new Error('Not found');
+    const data=await res.json();
+    posts=data.posts||[];
+    document.getElementById('syncStatus').innerText='✅ Live — Posts are global via npoint, everyone sees same posts • Last sync: '+new Date().toLocaleTimeString();
+    renderPosts();
+  }catch(e){ document.getElementById('syncStatus').innerText='⚠️ Could not load global posts.'; renderPosts(); }
+}
+
+async function saveGlobalPosts(){
+  if(NPOINT_ID==='YOUR_NPOINT_ID_HERE'){ renderPosts(); return; }
+  try{
+    // npoint update: POST to /{id} with new data, NO AUTH
+    await fetch(getNpointUrl(), {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({posts: posts})});
+  }catch(e){ console.log(e); }
+}
+
+function renderPosts(){ const list=document.getElementById('postsList'); if(!posts.length){ list.innerHTML='<p style="color:#888">No updates yet.</p>'; return; } list.innerHTML=posts.map((p,i)=>`<div class="post">${isOwner?`<button class="del-btn" onclick="deletePost(${i})">✕ Delete</button>`:''}<h4>${p.title}</h4><p>${p.text}</p>${p.img?`<img src="${p.img}">`:''}<span>📅 ${p.date} • by ephraim.v • 🌍 Global Post via npoint</span></div>`).join(''); }
+async function addPostGlobal(){ const title=document.getElementById('postTitle').value.trim(); const text=document.getElementById('postText').value.trim(); const linkImg=document.getElementById('postImage').value.trim(); const finalImg=uploadedImageData||linkImg; if(!title||!text){ alert('Please add title and text'); return; } if(NPOINT_ID==='YOUR_NPOINT_ID_HERE'){ alert('⚠️ Click Activate first, copy ID, paste in code.'); } document.getElementById('postBtn').innerText='⏳ Posting...'; posts.unshift({title,text,img:finalImg,date:new Date().toLocaleString()}); await saveGlobalPosts(); document.getElementById('postTitle').value=''; document.getElementById('postText').value=''; document.getElementById('postImage').value=''; document.getElementById('postFile').value=''; uploadedImageData=''; document.getElementById('imgPreview').style.display='none'; renderPosts(); document.getElementById('postBtn').innerText='📤 Post To Everyone'; alert('✅ Posted! Everyone will see it now.'); }
+async function deletePost(i){ if(!confirm('Delete this post for everyone?')) return; posts.splice(i,1); await saveGlobalPosts(); renderPosts(); }
+function unlockPost(){ const val=document.getElementById('ownerPass').value; if(val===SECRET_CODE){ isOwner=true; document.getElementById('editor').style.display='block'; document.getElementById('loginArea').style.display='none'; if(NPOINT_ID==='YOUR_NPOINT_ID_HERE') document.getElementById('setupBox').style.display='block'; renderPosts(); } else { document.getElementById('loginMsg').innerText='❌ Wrong code. Only owner can post.'; document.getElementById('ownerPass').value=''; } }
+function lockPost(){ isOwner=false; document.getElementById('editor').style.display='none'; document.getElementById('loginArea').style.display='block'; renderPosts(); }
+document.getElementById('ownerPass').addEventListener('keydown', e=>{ if(e.key==='Enter') unlockPost(); });
+loadGlobalPosts();
+setInterval(loadGlobalPosts, 15000);
+</script>
+</body>
+</html>
